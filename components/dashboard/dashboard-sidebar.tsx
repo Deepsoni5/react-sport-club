@@ -3,6 +3,8 @@
 import {
   BarChart3,
   Box,
+  ChevronDown,
+  ChevronRight,
   CreditCard,
   Grid,
   LayoutDashboard,
@@ -13,8 +15,14 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   Sidebar,
   SidebarContent,
@@ -30,6 +38,11 @@ import {
 export function DashboardSidebar() {
   const pathname = usePathname();
   const { isMobile } = useSidebar();
+  const [openSubMenu, setOpenSubMenu] = useState<string | null>("Bookings");
+
+  const toggleSubMenu = (title: string) => {
+    setOpenSubMenu((prev) => (prev === title ? null : title));
+  };
 
   const navItems = [
     {
@@ -56,6 +69,24 @@ export function DashboardSidebar() {
       title: "Bookings",
       icon: Box,
       href: "/super-admin/bookings",
+      subItems: [
+        {
+          title: "All Bookings",
+          href: "/super-admin/bookings",
+        },
+        {
+          title: "Today's Bookings",
+          href: "/super-admin/bookings/today",
+        },
+        {
+          title: "Empty Slots",
+          href: "/super-admin/bookings/empty-slots",
+        },
+        {
+          title: "Events Booking",
+          href: "/super-admin/bookings/events",
+        },
+      ],
     },
     {
       title: "Products",
@@ -98,25 +129,85 @@ export function DashboardSidebar() {
         </SidebarHeader>
       )}
       <SidebarContent className="sm:mt-16 p-3 pt-4 bg-white">
-        <SidebarMenu className="space-y-2">
+        <SidebarMenu className="space-y-1">
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive =
+              pathname === item.href || pathname.startsWith(`${item.href}/`);
+            const hasSubItems = item.subItems && item.subItems.length > 0;
+            const isSubMenuOpen = openSubMenu === item.title;
+
             return (
-              <SidebarMenuItem key={item.href} className="my-1">
-                <SidebarMenuButton
-                  asChild
-                  isActive={isActive}
-                  className={`${isActive ? "bg-primary/10 text-primary font-medium" : ""} py-2`}
-                >
-                  <Link
-                    href={item.href}
-                    className="flex items-center gap-3 px-2"
+              <div key={item.href}>
+                {hasSubItems ? (
+                  <Collapsible
+                    open={isSubMenuOpen}
+                    onOpenChange={() => toggleSubMenu(item.title)}
+                    className="w-full"
                   >
-                    <item.icon className="h-5 w-5 flex-shrink-0" />
-                    <span className="truncate">{item.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+                    <SidebarMenuItem className="my-1">
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton
+                          className={`${isActive ? "bg-primary/10 text-primary font-medium" : ""} py-2 justify-between`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <item.icon className="h-5 w-5 flex-shrink-0" />
+                            <span className="truncate">{item.title}</span>
+                          </div>
+                          {isSubMenuOpen ? (
+                            <ChevronDown className="h-4 w-4" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4" />
+                          )}
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                    </SidebarMenuItem>
+                    <CollapsibleContent>
+                      <div className="ml-9 mt-1 space-y-1 border-l border-gray-200 pl-2">
+                        {item.subItems.map((subItem) => {
+                          const isSubItemActive = pathname === subItem.href;
+                          return (
+                            <SidebarMenuItem
+                              key={subItem.href}
+                              className="my-1"
+                            >
+                              <SidebarMenuButton
+                                asChild
+                                isActive={isSubItemActive}
+                                className={`${isSubItemActive ? "bg-primary/10 text-primary font-medium" : ""} py-1.5 text-sm`}
+                              >
+                                <Link
+                                  href={subItem.href}
+                                  className="flex items-center gap-3 px-2"
+                                >
+                                  <span className="truncate">
+                                    {subItem.title}
+                                  </span>
+                                </Link>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                          );
+                        })}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                ) : (
+                  <SidebarMenuItem className="my-1">
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      className={`${isActive ? "bg-primary/10 text-primary font-medium" : ""} py-2`}
+                    >
+                      <Link
+                        href={item.href}
+                        className="flex items-center gap-3 px-2"
+                      >
+                        <item.icon className="h-5 w-5 flex-shrink-0" />
+                        <span className="truncate">{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )}
+              </div>
             );
           })}
         </SidebarMenu>
