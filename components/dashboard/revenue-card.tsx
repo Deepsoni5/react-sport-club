@@ -1,9 +1,7 @@
 "use client";
 
-import { DollarSign } from "lucide-react";
 import { useEffect, useRef } from "react";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 
 export function RevenueCard() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -14,107 +12,107 @@ export function RevenueCard() {
     const ctx = canvasRef.current.getContext("2d");
     if (!ctx) return;
 
-    // Clear canvas
-    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-
-    // Sample data for the chart
-    const data = [
-      20, 30, 50, 40, 60, 50, 40, 50, 60, 70, 80, 90, 100, 110, 100, 110, 120,
-      130,
-    ];
-    const maxValue = Math.max(...data);
-    const canvasWidth = canvasRef.current.width;
-    const canvasHeight = canvasRef.current.height;
+    const width = canvasRef.current.width;
+    const height = canvasRef.current.height;
     const padding = 20;
-    const chartWidth = canvasWidth - padding * 2;
-    const chartHeight = canvasHeight - padding * 2;
-    const barWidth = chartWidth / data.length;
-    const barSpacing = 2;
 
-    // Draw the bars
-    data.forEach((value, index) => {
-      const barHeight = (value / maxValue) * chartHeight;
-      const x = padding + index * barWidth;
-      const y = canvasHeight - padding - barHeight;
+    // Clear canvas
+    ctx.clearRect(0, 0, width, height);
 
-      // Draw bar background
-      ctx.fillStyle = "#e0e7ff";
-      ctx.fillRect(x, y, barWidth - barSpacing, barHeight);
-    });
-
-    // Draw the line
+    // Draw grid lines
     ctx.beginPath();
-    ctx.strokeStyle = "#6366f1";
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#f3f4f6";
+    ctx.lineWidth = 1;
 
-    data.forEach((value, index) => {
-      const x = padding + index * barWidth + barWidth / 2;
-      const y = canvasHeight - padding - (value / maxValue) * chartHeight;
-
-      if (index === 0) {
-        ctx.moveTo(x, y);
-      } else {
-        ctx.lineTo(x, y);
-      }
-    });
+    // Horizontal grid lines
+    for (let i = 1; i < 4; i++) {
+      const y = padding + (i * (height - padding * 2)) / 4;
+      ctx.moveTo(padding, y);
+      ctx.lineTo(width - padding, y);
+    }
     ctx.stroke();
 
-    // Draw the point
-    const lastIndex = data.length - 1;
-    const lastX = padding + lastIndex * barWidth + barWidth / 2;
-    const lastY =
-      canvasHeight - padding - (data[lastIndex] / maxValue) * chartHeight;
+    // Draw month labels
+    ctx.fillStyle = "#9ca3af";
+    ctx.font = "10px Arial";
+    ctx.textAlign = "center";
 
-    ctx.beginPath();
-    ctx.arc(lastX, lastY, 5, 0, 2 * Math.PI);
-    ctx.fillStyle = "#6366f1";
-    ctx.fill();
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const monthWidth = (width - padding * 2) / 11;
+
+    months.forEach((month, i) => {
+      const x = padding + i * monthWidth;
+      ctx.fillText(month, x, height - 5);
+    });
+
+    // Create smooth curves
+    const drawCurve = (points: { x: number; y: number }[], color: string) => {
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+
+      ctx.moveTo(points[0].x, points[0].y);
+
+      for (let i = 0; i < points.length - 1; i++) {
+        const xc = (points[i].x + points[i + 1].x) / 2;
+        const yc = (points[i].y + points[i + 1].y) / 2;
+        ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+      }
+
+      ctx.stroke();
+    };
+
+    // Generate points for both curves
+    const greenPoints = Array.from({ length: 12 }, (_, i) => ({
+      x: padding + (i * (width - padding * 2)) / 11,
+      y: padding + (height - padding * 2) / 2 + Math.sin(i / 1.5) * 30,
+    }));
+
+    const yellowPoints = Array.from({ length: 12 }, (_, i) => ({
+      x: padding + (i * (width - padding * 2)) / 11,
+      y: padding + (height - padding * 2) / 2 + Math.cos(i / 1.5) * 30,
+    }));
+
+    drawCurve(greenPoints, "#22c55e");
+    drawCurve(yellowPoints, "#eab308");
   }, []);
 
   return (
-    <Card className="col-span-1 md:col-span-2">
-      <CardHeader className="flex flex-row items-start justify-between pb-2">
+    <Card className="p-4">
+      <div className="flex justify-between items-start">
         <div>
-          <div className="flex items-center gap-2">
-            <DollarSign className="h-5 w-5 text-green-500" />
-            <div className="text-lg font-medium">This Month Revenue</div>
-          </div>
-          <CardTitle className="text-4xl font-bold text-green-500">
-            128.7K
-          </CardTitle>
-        </div>
-        <div className="text-right text-sm">
-          <div className="text-gray-500">Last Month Revenue 350k</div>
-          <div className="text-blue-500">View Full Report</div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="mt-4 h-48">
-          <canvas
-            ref={canvasRef}
-            width={600}
-            height={192}
-            className="w-full h-full"
-          ></canvas>
-        </div>
-        <div className="mt-4 flex items-center justify-between">
-          <div className="grid grid-cols-4 gap-4">
-            <div className="text-sm text-gray-500">$1000</div>
-            <div className="text-sm text-gray-500">$500</div>
-            <div className="text-sm text-gray-500">$200</div>
-            <div className="text-sm text-gray-500">$100</div>
-          </div>
-          <div className="rounded-md bg-gray-100 p-2">
-            <div className="text-sm text-gray-500">29 July 00:00</div>
-            <div className="flex items-center gap-2">
-              <div className="text-xl font-bold">220,342.76</div>
-              <div className="rounded-md bg-green-100 px-2 py-1 text-sm font-medium text-green-600">
-                +3.4%
-              </div>
-            </div>
+          <div className="text-xs text-gray-500">This Month Revenue</div>
+          <div className="text-2xl font-bold text-green-500 mt-1">
+            ₹ 1,102,500 /-
           </div>
         </div>
-      </CardContent>
+        <div className="text-right">
+          <div className="text-xs text-gray-500">Last Month</div>
+          <div className="text-xs text-blue-500 font-medium">₹ 985K</div>
+        </div>
+      </div>
+
+      <div className="mt-4 h-[120px]">
+        <canvas
+          ref={canvasRef}
+          width={500}
+          height={120}
+          className="w-full h-full"
+        />
+      </div>
     </Card>
   );
 }

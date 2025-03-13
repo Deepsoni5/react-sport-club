@@ -1,9 +1,7 @@
 "use client";
 
-import { ArrowUpRight } from "lucide-react";
 import { useEffect, useRef } from "react";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 
 export function GroundRegisterCard() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -14,66 +12,57 @@ export function GroundRegisterCard() {
     const ctx = canvasRef.current.getContext("2d");
     if (!ctx) return;
 
+    const width = canvasRef.current.width;
+    const height = canvasRef.current.height;
+    const padding = 5;
+
     // Clear canvas
-    ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    ctx.clearRect(0, 0, width, height);
 
-    // Sample data for the chart
-    const data = [
-      20, 25, 30, 35, 25, 35, 45, 40, 50, 60, 55, 65, 70, 65, 75, 85, 80, 90,
-      85, 95,
-    ];
-    const maxValue = Math.max(...data);
-    const minValue = Math.min(...data);
-    const range = maxValue - minValue;
-    const canvasWidth = canvasRef.current.width;
-    const canvasHeight = canvasRef.current.height;
-    const padding = 10;
-    const chartWidth = canvasWidth - padding * 2;
-    const chartHeight = canvasHeight - padding * 2;
-    const pointSpacing = chartWidth / (data.length - 1);
+    // Sample data points - create a zigzag pattern like in the image
+    const data = [40, 60, 45, 70, 55, 80, 65, 90, 75, 95, 85, 100];
+    const points = data.map((value, index) => ({
+      x: padding + ((width - padding * 2) * index) / (data.length - 1),
+      y: height - padding - (value / 100) * (height - padding * 2),
+    }));
 
-    // Draw the line
+    // Draw line
     ctx.beginPath();
     ctx.strokeStyle = "#22c55e";
     ctx.lineWidth = 2;
-
-    data.forEach((value, index) => {
-      const x = padding + index * pointSpacing;
-      const normalizedValue = (value - minValue) / range;
-      const y = canvasHeight - padding - normalizedValue * chartHeight;
-
+    points.forEach((point, index) => {
       if (index === 0) {
-        ctx.moveTo(x, y);
+        ctx.moveTo(point.x, point.y);
       } else {
-        ctx.lineTo(x, y);
+        ctx.lineTo(point.x, point.y);
       }
     });
     ctx.stroke();
+
+    // Draw points
+    points.forEach((point) => {
+      ctx.beginPath();
+      ctx.fillStyle = "#22c55e";
+      ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    });
   }, []);
 
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="pb-2">
-        <div className="text-sm text-gray-500">This Month</div>
-        <CardTitle>Ground Register</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="flex items-baseline gap-2">
-          <div className="text-4xl font-bold">1568</div>
-          <div className="flex items-center text-sm font-medium text-green-500">
-            <ArrowUpRight className="h-4 w-4" />
-            18.34%
-          </div>
-        </div>
-        <div className="mt-4 h-24">
-          <canvas
-            ref={canvasRef}
-            width={300}
-            height={96}
-            className="w-full h-full"
-          ></canvas>
-        </div>
-      </CardContent>
+    <Card className="p-4">
+      <div className="text-xs text-gray-500">This Month</div>
+      <div className="mt-1">
+        <div className="text-sm font-medium">Ground Register</div>
+        <div className="text-3xl font-bold mt-1">1568</div>
+      </div>
+      <div className="mt-4 h-[60px]">
+        <canvas
+          ref={canvasRef}
+          width={200}
+          height={60}
+          className="w-full h-full"
+        />
+      </div>
     </Card>
   );
 }
