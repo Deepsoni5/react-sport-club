@@ -2,6 +2,7 @@
 
 import { Plus, Filter } from "lucide-react";
 import { useState, useMemo, useEffect } from "react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -301,7 +302,14 @@ export function GroundAdminList() {
                 <TableCell>
                   {(currentPage - 1) * itemsPerPage + index + 1}
                 </TableCell>
-                <TableCell>{admin.fullName}</TableCell>
+                <TableCell>
+                  <Link
+                    href={`/super-admin/ground-admin/${admin.id}`}
+                    className="text-blue-500 hover:underline"
+                  >
+                    {admin.fullName}
+                  </Link>
+                </TableCell>
                 <TableCell>{admin.businessName}</TableCell>
                 <TableCell>{admin.totalGround}</TableCell>
                 <TableCell>{admin.email}</TableCell>
