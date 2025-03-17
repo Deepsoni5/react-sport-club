@@ -1,11 +1,17 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { ChevronDown, MapPin, Search } from "lucide-react"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown, MapPin, Search } from "lucide-react";
 
 export function Navbar() {
   return (
     <nav className="flex items-center justify-between w-full">
+      {/* Left Section - Logo and Marketplace */}
       <div className="flex items-center gap-6">
         <Link href="/" className="flex items-center space-x-2">
           <div className="h-6 w-6">
@@ -36,15 +42,50 @@ export function Navbar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 bg-black/95 text-white">
-              <DropdownMenuItem className="focus:bg-white/10">Sports</DropdownMenuItem>
-              <DropdownMenuItem className="focus:bg-white/10">Gaming</DropdownMenuItem>
-              <DropdownMenuItem className="focus:bg-white/10">Electronics</DropdownMenuItem>
+              <DropdownMenuItem className="focus:bg-white/10">
+                Sports
+              </DropdownMenuItem>
+              <DropdownMenuItem className="focus:bg-white/10">
+                Gaming
+              </DropdownMenuItem>
+              <DropdownMenuItem className="focus:bg-white/10">
+                Electronics
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
 
-      <nav className="hidden items-center space-x-4 md:flex">
+      {/* Center Section - Main Navigation Links */}
+      <div className="hidden md:flex items-center space-x-6">
+        <Link
+          href="/about"
+          className="text-white/90 transition-colors duration-200 hover:text-white"
+        >
+          About
+        </Link>
+        <Link
+          href="/contact"
+          className="text-white/90 transition-colors duration-200 hover:text-white"
+        >
+          Contact
+        </Link>
+        <Link
+          href="/careers"
+          className="text-white/90 transition-colors duration-200 hover:text-white"
+        >
+          Careers
+        </Link>
+        <Link
+          href="/blogs"
+          className="text-white/90 transition-colors duration-200 hover:text-white"
+        >
+          Blogs
+        </Link>
+      </div>
+
+      {/* Right Section - Location, Search, Sign in, Register */}
+      <div className="hidden md:flex items-center space-x-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -58,9 +99,15 @@ export function Navbar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 bg-black/95 text-white">
-            <DropdownMenuItem className="focus:bg-white/10">New York</DropdownMenuItem>
-            <DropdownMenuItem className="focus:bg-white/10">London</DropdownMenuItem>
-            <DropdownMenuItem className="focus:bg-white/10">Tokyo</DropdownMenuItem>
+            <DropdownMenuItem className="focus:bg-white/10">
+              New York
+            </DropdownMenuItem>
+            <DropdownMenuItem className="focus:bg-white/10">
+              London
+            </DropdownMenuItem>
+            <DropdownMenuItem className="focus:bg-white/10">
+              Tokyo
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
@@ -89,8 +136,7 @@ export function Navbar() {
             Register
           </Button>
         </Link>
-      </nav>
+      </div>
     </nav>
-  )
+  );
 }
-

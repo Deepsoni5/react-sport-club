@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button"
-import { Menu } from "lucide-react"
-import Link from "next/link"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
+import Link from "next/link";
 
 export function MobileNav() {
   return (
@@ -15,21 +15,51 @@ export function MobileNav() {
       </SheetTrigger>
       <SheetContent side="left" className="bg-black/95 text-white">
         <div className="flex h-full flex-col gap-6 pt-6">
+          <Link
+            href="/about"
+            className="text-lg font-semibold hover:text-blue-400"
+          >
+            About
+          </Link>
+          <Link
+            href="/contact"
+            className="text-lg font-semibold hover:text-blue-400"
+          >
+            Contact
+          </Link>
+          <Link
+            href="/careers"
+            className="text-lg font-semibold hover:text-blue-400"
+          >
+            Careers
+          </Link>
+          <Link
+            href="/blogs"
+            className="text-lg font-semibold hover:text-blue-400"
+          >
+            Blogs
+          </Link>
+
           <Link href="/" className="text-lg font-semibold hover:text-blue-400">
             Marketplace
           </Link>
           <Link href="/" className="text-lg font-semibold hover:text-blue-400">
             Location
           </Link>
-          <Link href="/signin" className="text-lg font-semibold hover:text-blue-400">
+          <Link
+            href="/signin"
+            className="text-lg font-semibold hover:text-blue-400"
+          >
             Sign in
           </Link>
-          <Link href="/" className="text-lg font-semibold hover:text-blue-400">
+          <Link
+            href="/signup"
+            className="text-lg font-semibold hover:text-blue-400"
+          >
             Register
           </Link>
         </div>
       </SheetContent>
     </Sheet>
-  )
+  );
 }
-

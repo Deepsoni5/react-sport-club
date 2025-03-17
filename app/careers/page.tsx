@@ -1,11 +1,34 @@
+"use client";
+
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Upload } from "lucide-react";
 import Image from "next/image";
+import { useEffect } from "react";
 
 export default function CareersPage() {
+  useEffect(() => {
+    const animatedElements = document.querySelectorAll(".animate-on-scroll");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate-in");
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    animatedElements.forEach((el) => observer.observe(el));
+
+    return () => {
+      animatedElements.forEach((el) => observer.unobserve(el));
+    };
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-[#000314] via-[#100B47] to-[#000314]">
       <SiteHeader />
@@ -22,62 +45,102 @@ export default function CareersPage() {
               <p className="text-white">Appeal Form</p>
             </div>
 
-            <form className="space-y-8">
-              <div className="relative">
-                <Input
-                  type="text"
-                  placeholder="Full Name"
-                  defaultValue="Syed Talha Ahmed"
-                  className="bg-transparent border-b-2 border-t-0 border-x-0 rounded-none focus:border-b-white focus:ring-0 text-white placeholder:text-gray-400 pb-2 px-0"
-                />
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 group-focus-within:w-full transition-all duration-300"></div>
+            <form className="space-y-8 animate-on-scroll opacity-0 transition-all duration-700 translate-y-8">
+              <div className="group">
+                <label
+                  htmlFor="fullName"
+                  className="mb-2 block text-sm font-medium text-gray-200"
+                >
+                  Full Name
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="fullName"
+                    defaultValue="Syed Talha Ahmed"
+                    className="w-full rounded-md border-2 border-gray-600 bg-white/10 px-4 py-2 text-white placeholder:text-gray-400 transition-all duration-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 group-hover:border-gray-400"
+                  />
+                  <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-500 group-hover:w-full"></span>
+                </div>
               </div>
 
-              <div className="relative">
-                <Input
-                  type="email"
-                  placeholder="Email ID"
-                  className="bg-transparent border-b-2 border-t-0 border-x-0 rounded-none focus:border-b-white focus:ring-0 text-white placeholder:text-gray-400 pb-2 px-0"
-                />
+              <div className="group">
+                <label
+                  htmlFor="email"
+                  className="mb-2 block text-sm font-medium text-gray-200"
+                >
+                  Email ID
+                </label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    id="email"
+                    className="w-full rounded-md border-2 border-gray-600 bg-white/10 px-4 py-2 text-white placeholder:text-gray-400 transition-all duration-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 group-hover:border-gray-400"
+                    placeholder="example@email.com"
+                  />
+                  <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-500 group-hover:w-full"></span>
+                </div>
               </div>
 
-              <div className="relative">
-                <Input
-                  type="tel"
-                  placeholder="Mobile Number"
-                  className="bg-transparent border-b-2 border-t-0 border-x-0 rounded-none focus:border-b-white focus:ring-0 text-white placeholder:text-gray-400 pb-2 px-0"
-                />
+              <div className="group">
+                <label
+                  htmlFor="phone"
+                  className="mb-2 block text-sm font-medium text-gray-200"
+                >
+                  Mobile Number
+                </label>
+                <div className="relative">
+                  <input
+                    type="tel"
+                    id="phone"
+                    className="w-full rounded-md border-2 border-gray-600 bg-white/10 px-4 py-2 text-white placeholder:text-gray-400 transition-all duration-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 group-hover:border-gray-400"
+                    placeholder="+91 00000 00000"
+                  />
+                  <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-500 group-hover:w-full"></span>
+                </div>
               </div>
 
-              <div className="relative">
-                <Input
-                  type="text"
-                  placeholder="Location"
-                  className="bg-transparent border-b-2 border-t-0 border-x-0 rounded-none focus:border-b-white focus:ring-0 text-white placeholder:text-gray-400 pb-2 px-0"
-                />
+              <div className="group">
+                <label
+                  htmlFor="location"
+                  className="mb-2 block text-sm font-medium text-gray-200"
+                >
+                  Location
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="location"
+                    className="w-full rounded-md border-2 border-gray-600 bg-white/10 px-4 py-2 text-white placeholder:text-gray-400 transition-all duration-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 group-hover:border-gray-400"
+                    placeholder="City, Country"
+                  />
+                  <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-500 group-hover:w-full"></span>
+                </div>
               </div>
 
-              <div>
+              <div className="group">
                 <Button
                   variant="outline"
-                  className="border-2 border-blue-400 text-white bg-blue-500/20 hover:bg-blue-500/30 flex gap-2 font-medium transition-all duration-300 px-4 py-2"
+                  className="border-2 border-blue-400 text-white bg-blue-500/20 hover:bg-blue-500/30 flex gap-2 font-medium transition-all duration-300 px-4 py-2 group-hover:scale-105"
                 >
                   <Upload size={16} />
                   Upload Resume
                 </Button>
               </div>
 
-              <Button
-                type="submit"
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 mt-4"
-              >
-                SUBMIT
-              </Button>
+              <div className="relative overflow-hidden">
+                <Button
+                  type="submit"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 mt-4 transition-all duration-300 hover:shadow-lg hover:shadow-red-600/30 hover:scale-105"
+                >
+                  <span className="relative z-10">SUBMIT</span>
+                </Button>
+              </div>
             </form>
           </div>
 
           {/* Right side - Image with wavy border */}
-          <div className="relative hidden md:block">
+          <div className="relative hidden md:block animate-on-scroll opacity-0 transition-all duration-700 delay-200 translate-x-8">
             <div className="absolute inset-0 -m-8">
               <svg
                 viewBox="0 0 200 200"
@@ -121,7 +184,7 @@ export default function CareersPage() {
                 />
               </svg>
             </div>
-            <div className="relative rounded-lg overflow-hidden">
+            <div className="relative rounded-lg overflow-hidden transition-transform duration-500 hover:scale-105">
               <Image
                 src="https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=1000&auto=format&fit=crop"
                 alt="Cricket Umpire"

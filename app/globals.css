@@ -48,6 +48,7 @@ body {
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -88,7 +89,35 @@ body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body {
+    @apply overflow-x-hidden max-w-full;
+    width: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.animate-on-scroll {
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+.animate-in {
+  opacity: 1 !important;
+  transform: translate(0, 0) !important;
 }
