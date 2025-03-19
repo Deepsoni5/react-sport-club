@@ -2,6 +2,7 @@
 
 import { ChevronRight, Filter, MapPin, Plus, Star, Users } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useMemo, useEffect } from "react";
 
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { FilterDialog } from "@/components/grounds/filter-dialog";
 
 // Sample data for top performing grounds
 const topGrounds = [
@@ -183,6 +185,7 @@ const allGrounds = [
 export function GroundsList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [filterOpen, setFilterOpen] = useState(false);
   const itemsPerPage = 10;
 
   // Filter grounds based on search term
@@ -229,42 +232,45 @@ export function GroundsList() {
         <ScrollArea className="w-full whitespace-nowrap rounded-lg">
           <div className="flex w-max space-x-4 p-1">
             {topGrounds.map((ground) => (
-              <div
+              <Link
                 key={ground.id}
-                className="relative overflow-hidden rounded-lg border bg-white w-[300px]"
+                href={`/super-admin/grounds/${ground.id}`}
+                className="block"
               >
-                <div className="aspect-[3/2] relative">
-                  <Image
-                    src={ground.image || "/placeholder.svg"}
-                    alt={ground.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-3">
-                  <h3 className="font-medium truncate">{ground.name}</h3>
-                  <div className="mt-1 flex items-center gap-2 text-sm text-gray-500">
-                    <MapPin className="h-4 w-4" />
-                    <span>{ground.location}</span>
+                <div className="relative overflow-hidden rounded-lg border bg-white w-[300px]">
+                  <div className="aspect-[3/2] relative">
+                    <Image
+                      src={ground.image || "/placeholder.svg"}
+                      alt={ground.name}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
-                  <div className="mt-2 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src={ground.admin.avatar || "/placeholder.svg"}
-                        alt={ground.admin.name}
-                        width={24}
-                        height={24}
-                        className="rounded-full"
-                      />
-                      <span className="text-sm">{ground.admin.name}</span>
+                  <div className="p-3">
+                    <h3 className="font-medium truncate">{ground.name}</h3>
+                    <div className="mt-1 flex items-center gap-2 text-sm text-gray-500">
+                      <MapPin className="h-4 w-4" />
+                      <span>{ground.location}</span>
                     </div>
-                    <div className="flex items-center gap-1 text-sm text-gray-500">
-                      <Users className="h-4 w-4" />
-                      <span>{ground.views}</span>
+                    <div className="mt-2 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Image
+                          src={ground.admin.avatar || "/placeholder.svg"}
+                          alt={ground.admin.name}
+                          width={24}
+                          height={24}
+                          className="rounded-full"
+                        />
+                        <span className="text-sm">{ground.admin.name}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-sm text-gray-500">
+                        <Users className="h-4 w-4" />
+                        <span>{ground.views}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
           <ScrollBar orientation="horizontal" />
@@ -283,7 +289,12 @@ export function GroundsList() {
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" className="h-9 gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-9 gap-2"
+              onClick={() => setFilterOpen(true)}
+            >
               <Filter className="h-4 w-4 text-gray-500" />
               Filter
             </Button>
@@ -325,7 +336,14 @@ export function GroundsList() {
                 <TableRow key={ground.id}>
                   <TableCell>{ground.id}</TableCell>
                   <TableCell>{ground.ownerName}</TableCell>
-                  <TableCell>{ground.groundName}</TableCell>
+                  <TableCell>
+                    <Link
+                      href={`/super-admin/grounds/${ground.id}`}
+                      className="text-blue-500 hover:underline"
+                    >
+                      {ground.groundName}
+                    </Link>
+                  </TableCell>
                   <TableCell>{ground.location}</TableCell>
                   <TableCell>{ground.usersVisited}</TableCell>
                   <TableCell>{ground.avgPrice}</TableCell>
@@ -413,6 +431,9 @@ export function GroundsList() {
           <span className="ml-2 text-sm text-gray-500">/Page</span>
         </div>
       </div>
+
+      {/* Filter Dialog */}
+      <FilterDialog open={filterOpen} onOpenChange={setFilterOpen} />
     </div>
   );
 }
